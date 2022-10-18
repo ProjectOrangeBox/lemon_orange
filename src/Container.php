@@ -49,11 +49,19 @@ class Container
 
 	public function get(string $serviceName)
 	{
+		/* force factory? */
 		if (substr($serviceName, -2) == '[]') {
 			$serviceName = substr($serviceName, 0, -2);
 			$factory = true;
 		} else {
 			$factory = false;
+		}
+		
+		$serviceName = strtolower($serviceName);
+		
+		/* alias? */
+		if (self::$registeredServices[$serviceName]['alias']) {
+			$serviceName = self::$registeredServices[$serviceName]['reference'];
 		}
 
 		/* Is this service even registered? */
@@ -61,8 +69,6 @@ class Container
 			/* fatal */
 			throw new ServiceNotFound($serviceName);
 		}
-
-		$serviceName = strtolower($serviceName);
 
 		/* Is this a singleton or factory? */
 		return (self::$registeredServices[$serviceName]['singleton'] && !$factory) ? $this->singleton($serviceName) : $this->factory($serviceName);
@@ -94,7 +100,7 @@ class Container
 		if (substr($serviceName, -2) == '[]') {
 			$serviceName = substr($serviceName, 0, -2);
 			$singleton = false;
-		} elseif (substr($serviceName, 1) == '@') {
+		} elseif (substr($serviceName,0, 1) == '@') {
 			$serviceName = substr($serviceName, 1);
 			$alias = true;
 		} else {
@@ -200,6 +206,8 @@ class Container
 		foreach (self::$registeredServices as $key => $record) {
 			if (self::$registeredServices[$key]['closure'] instanceof \Closure) {
 				$type = 'Service Generator';
+			} elseif (self::$registeredServices[$key]['alias']) {
+				$type = 'alias';
 			} else {
 				$check = (isset(self::$registeredServices[$key]['reference'])) ? 'reference' : 'closure';
 				$type = gettype(self::$registeredServices[$key][$check]);
