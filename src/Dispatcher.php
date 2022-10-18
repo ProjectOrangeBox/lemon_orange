@@ -7,6 +7,7 @@ namespace dmyers\orange;
 use dmyers\orange\Input;
 use dmyers\orange\Config;
 use dmyers\orange\Output;
+use dmyers\orange\Router;
 use dmyers\orange\exceptions\MethodNotFound;
 use dmyers\orange\exceptions\ControllerClassNotFound;
 
@@ -22,8 +23,10 @@ class Dispatcher
 		$this->config = $config;
 	}
 
-	public function call(array $route): Output
+	public function call(Router $route): Output
 	{
+		$route = $route->matched();
+
 		$controllerClass = $route['controller'];
 
 		if (class_exists($controllerClass)) {
