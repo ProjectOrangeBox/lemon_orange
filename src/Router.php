@@ -13,21 +13,20 @@ class Router
 	const CONTROLLER = 0;
 	const METHOD = 1;
 
-	protected $routes = null;
-	protected $input = null;
-	protected $route = [];
+	protected $routes = null; /* all routes */
+	protected $matched = []; /* route args after a match */
 
 	public function __construct(array $routes)
 	{
 		$this->routes = $routes;
 	}
 
-	public function route(string $match = null) /* mixed string|array */
+	public function matched(string $match = null) /* mixed string|array */
 	{
-		return (isset($this->route[$match])) ? $this->route[$match] : $this->route;
+		return (isset($this->matched[$match])) ? $this->matched[$match] : $this->matched;
 	}
 
-	public function match(string $requestUri, string $requestMethod): array
+	public function match(string $requestUri, string $requestMethod): self
 	{
 		$url = false;
 		$requestMethod = strtoupper($requestMethod);
@@ -52,7 +51,7 @@ class Router
 			throw new RouteNotFound();
 		}
 
-		$this->route = [
+		$this->matched = [
 			'requestMethod' => $requestMethod,
 			'requestURI' => $requestUri,
 			'matchedURI' => $route['url'],
@@ -65,7 +64,7 @@ class Router
 			'args' => (bool)count($argv),
 		];
 
-		return $this->route;
+		return $this;
 	}
 
 	public function getUrl(string $name, array $arguments = [], bool $appendSiteUrl = true): string
