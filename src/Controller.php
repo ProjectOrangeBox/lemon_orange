@@ -15,5 +15,12 @@ class Controller
 		$this->input = $input;
 		$this->output = $output;
 		$this->config = $config;
+
+		$this->construct();
+	}
+
+	protected function construct()
+	{
+		/* to be overridden by child class */
 	}
 } /* end class */
