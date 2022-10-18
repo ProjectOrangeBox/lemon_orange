@@ -47,11 +47,9 @@ class Output
 		return $this;
 	}
 
-	public function appendOutput(?string $html): self
+	public function appendOutput(string $html): self
 	{
-		if (is_string($html)) {
-			$this->output .= $html;
-		}
+		$this->output .= $html;
 
 		return $this;
 	}
@@ -188,6 +186,11 @@ class Output
 
 			exit(0);
 		}
+	}
+
+	public function redirect(string $url, int $responseCode = 200)
+	{
+		$this->header('Location: ' . $url)->responseCode($responseCode);
 	}
 
 	protected function updateContentHeader(): void
