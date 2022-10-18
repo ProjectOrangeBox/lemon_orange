@@ -32,11 +32,11 @@ if (!function_exists('http')) {
 
 		$container->events->trigger('before.router', $container);
 
-		$route = $container->router->match($container->input->requestUri(), $container->input->requestMethod());
+		$container->router->match($container->input->requestUri(), $container->input->requestMethod());
 
 		$container->events->trigger('before.controller', $container);
 
-		$container->output = $container->dispatcher->call($route);
+		$container->output = $container->dispatcher->call($container->router);
 
 		$container->events->trigger('after.controller', $container);
 
