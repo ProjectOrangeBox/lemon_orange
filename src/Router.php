@@ -38,9 +38,9 @@ class Router
 				$matchedMethod = (is_array($route['method'])) ? strtoupper(implode('|', $route['method'])) : strtoupper($route['method']);
 
 				/* check if the current request method matches and the expression mathces */
-				if ((strpos($matchedMethod, $requestMethod) !== false || $route['method'] == '*') && preg_match("@^" . $route['url'] . "$@D", '/' . trim($requestUri, '/'), $args)) {
+				if ((strpos($matchedMethod, $requestMethod) !== false || $route['method'] == '*') && preg_match("@^" . $route['url'] . "$@D", '/' . trim($requestUri, '/'), $argv)) {
 					/* remove the first arg */
-					$url = array_shift($args);
+					$url = array_shift($argv);
 
 					/* pop out of foreach loop */
 					break;
@@ -60,15 +60,15 @@ class Router
 			'controller' => $route['callback'][self::CONTROLLER],
 			'method' => $route['callback'][self::METHOD],
 			'url' => $url,
-			'args' => $args,
-			'count' => count($args),
-			'has' => (bool)count($args),
+			'argv' => $argv,
+			'argc' => count($argv),
+			'args' => (bool)count($argv),
 		];
 
 		return $this->route;
 	}
 
-	public function getUrl(string $name, array $arguments = []): string
+	public function getUrl(string $name, array $arguments = [], bool $appendSiteUrl = true): string
 	{
 		$url = '';
 		$name = $this->normalizeName($name);
@@ -108,19 +108,7 @@ class Router
 			throw new RouterNameNotFound('Path "' . $name . '" not found');
 		}
 
-		return $url;
-	}
-
-	public function redirect(string $url, int $responseCode = 0)
-	{
-		header('Location: ' . $url, true, $responseCode);
-
-		exit(0);
-	}
-
-	public function redirectNamed(string $name, array $arguments = [], int $responseCode = 0)
-	{
-		$this->redirect(siteUrl() . $this->getUrl($name, $arguments), $responseCode);
+		return ($appendSiteUrl ? siteUrl() : '') . $url;
 	}
 
 	protected function normalizeName(string $name): string
