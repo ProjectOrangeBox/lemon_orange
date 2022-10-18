@@ -34,13 +34,13 @@ if (!function_exists('http')) {
 
 		$route = $container->router->match($container->input->requestUri(), $container->input->requestMethod());
 
-		$container->events->trigger('before.controller', $container, $route);
+		$container->events->trigger('before.controller', $container);
 
-		$output = $container->dispatcher->call($route);
+		$container->output = $container->dispatcher->call($route);
 
-		$container->events->trigger('after.controller', $container, $output);
+		$container->events->trigger('after.controller', $container);
 
-		$container->output->appendOutput($output)->send();
+		$container->output->send();
 
 		$container->events->trigger('after.output', $container);
 
