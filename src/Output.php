@@ -20,14 +20,9 @@ class Output
 	protected $config = null;
 	protected $input = null;
 
-	public function __construct(array $config, input &$input)
+	public function __construct(array $config)
 	{
 		$this->config = $config;
-		$this->input = $input;
-
-		if ($config['cors']) {
-			$this->handleCrossOriginResourceSharing();
-		}
 
 		$this->contentType = (isset($config['contentType'])) ? $config['contentType'] : $this->contentType;
 		$this->charSet = (isset($config['charSet'])) ? $config['charSet'] : $this->charSet;
@@ -156,36 +151,6 @@ class Output
 
 		/* capture cache and return */
 		return ob_get_clean();
-	}
-
-	public function handleCrossOriginResourceSharing()
-	{
-		/* Handle CORS */
-
-		/* Allow from any origin */
-		if ($this->input->server('http_origin')) {
-			header('Access-Control-Allow-Origin: ' . $this->input->server('http_origin'));
-			header('Access-Control-Allow-Credentials: true');
-			/* cache for 1 day */
-			header('Access-Control-Max-Age: 86400');
-		}
-
-		/* Access-Control headers are received during OPTIONS requests */
-		if (strtoupper($this->input->server('request_method')) == 'OPTIONS') {
-			if ($this->input->server('http_access_control_request_method')) {
-				// may also be using PUT, PATCH, HEAD etc
-				header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS');
-			}
-
-			if ($this->input->server('http_access_control_request_headers')) {
-				header('Access-Control-Allow-Headers: ' . $this->input->server('http_access_control_request_headers'));
-			}
-
-			header('Content-Length: 0');
-			header('Content-Type: text/plain');
-
-			exit(0);
-		}
 	}
 
 	public function redirect(string $url, int $responseCode = 200)
