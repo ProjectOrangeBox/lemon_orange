@@ -56,9 +56,9 @@ class Container
 		} else {
 			$factory = false;
 		}
-		
+
 		$serviceName = strtolower($serviceName);
-		
+
 		/* alias? */
 		if (self::$registeredServices[$serviceName]['alias']) {
 			$serviceName = self::$registeredServices[$serviceName]['reference'];
@@ -100,7 +100,7 @@ class Container
 		if (substr($serviceName, -2) == '[]') {
 			$serviceName = substr($serviceName, 0, -2);
 			$singleton = false;
-		} elseif (substr($serviceName,0, 1) == '@') {
+		} elseif (substr($serviceName, 0, 1) == '@') {
 			$serviceName = substr($serviceName, 1);
 			$alias = true;
 		} else {

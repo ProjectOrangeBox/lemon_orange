@@ -64,14 +64,14 @@ class Input
 
 	public function isHttpsRequest(): bool
 	{
-		$isHttps = false;
-
 		if (!empty($this->input['server']['https']) && $this->input['server']['https'] !== 'off') {
 			$isHttps = true;
 		} elseif (isset($this->input['server']['http_x_forwarded_proto']) && $this->input['server']['http_x_forwarded_proto'] === 'https') {
 			$isHttps = true;
 		} elseif (!empty($this->input['server']['http_front_end_https']) && $this->input['server']['http_front_end_https'] !== 'off') {
 			$isHttps = true;
+		} else {
+			$isHttps = false;
 		}
 
 		return $isHttps;
