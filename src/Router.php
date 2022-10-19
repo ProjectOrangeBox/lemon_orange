@@ -21,11 +21,6 @@ class Router
 		$this->routes = $routes;
 	}
 
-	public function matched(string $match = null) /* mixed string|array */
-	{
-		return (isset($this->matched[$match])) ? $this->matched[$match] : $this->matched;
-	}
-
 	public function match(string $requestUri, string $requestMethod): self
 	{
 		$url = false;
@@ -65,6 +60,15 @@ class Router
 		];
 
 		return $this;
+	}
+
+	public function getMatched(string $key = null) /* mixed string|array */
+	{
+		if ($key != null && !isset($this->matched[$key])) {
+			throw new InvalidValue('Unknown routing value "' . $key . '"');
+		}
+
+		return ($key) ? $this->matched[$key] : $this->matched;
 	}
 
 	public function getUrl(string $name, array $arguments = [], bool $appendSiteUrl = true): string
