@@ -94,6 +94,10 @@ class Container
 
 	public function set(string $serviceName, $option): void
 	{
+		/* default singleton non alias */
+		$alias = false;
+		$singleton = true;
+
 		if (substr($serviceName, -2) == '[]') {
 			/* factory */
 			$serviceName = substr($serviceName, 0, -2);
@@ -102,10 +106,6 @@ class Container
 			/* alias */
 			$serviceName = substr($serviceName, 1);
 			$alias = true;
-		} else {
-			/* default singleton non alias */
-			$alias = false;
-			$singleton = true;
 		}
 
 		if ($option instanceof \Closure) {
