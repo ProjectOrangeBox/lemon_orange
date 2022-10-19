@@ -30,19 +30,19 @@ if (!function_exists('http')) {
 
 		$container->{'$config'} = $config;
 
-		$container->events->trigger('before.router', $container);
+		$container->events->trigger('before.router', $container->input);
 
 		$container->router->match($container->input->requestUri(), $container->input->requestMethod());
 
-		$container->events->trigger('before.controller', $container);
+		$container->events->trigger('before.controller', $container->router, $container->input);
 
 		$container->dispatcher->call($container->router);
 
-		$container->events->trigger('after.controller', $container);
+		$container->events->trigger('after.controller', $container->router, $container->input, $container->output);
 
 		$container->output->send();
 
-		$container->events->trigger('after.output', $container);
+		$container->events->trigger('after.output', $container->router, $container->input, $container->output);
 
 		return $container;
 	}
@@ -111,7 +111,7 @@ if (!function_exists('logMsg')) {
 	 *
 	 * @return void
 	 */
-	function logMsg(string $msg, string $level = 'INFO')
+	function logMsg(string $msg, int $level = \dmyers\orange\Log::INFO)
 	{
 		container()->log->writeLog($level, $msg);
 	}
