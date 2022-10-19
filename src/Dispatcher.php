@@ -25,7 +25,7 @@ class Dispatcher
 
 	public function call(Router $route): Output
 	{
-		$route = $route->matched();
+		$route = $route->getMatched();
 
 		$controllerClass = $route['controller'];
 
