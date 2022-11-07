@@ -7,11 +7,13 @@ namespace dmyers\orange;
 use dmyers\orange\Input;
 use dmyers\orange\Config;
 use dmyers\orange\Output;
-use dmyers\orange\Router;
 use dmyers\orange\exceptions\MethodNotFound;
+use dmyers\orange\interfaces\OutputInterface;
+use dmyers\orange\interfaces\RouterInterface;
+use dmyers\orange\interfaces\DispatcherInterface;
 use dmyers\orange\exceptions\ControllerClassNotFound;
 
-class Dispatcher
+class Dispatcher implements DispatcherInterface
 {
 	protected $input = null;
 	protected $output = null;
@@ -23,7 +25,7 @@ class Dispatcher
 		$this->config = $config;
 	}
 
-	public function call(Router $route): Output
+	public function call(RouterInterface $route): OutputInterface
 	{
 		$route = $route->getMatched();
 

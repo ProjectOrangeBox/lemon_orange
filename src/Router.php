@@ -6,13 +6,11 @@ namespace dmyers\orange;
 
 use dmyers\orange\exceptions\InvalidValue;
 use dmyers\orange\exceptions\RouteNotFound;
+use dmyers\orange\interfaces\RouterInterface;
 use dmyers\orange\exceptions\RouterNameNotFound;
 
-class Router
+class Router implements RouterInterface
 {
-	const CONTROLLER = 0;
-	const METHOD = 1;
-
 	protected $routes = null; /* all routes */
 	protected $matched = []; /* route args after a match */
 

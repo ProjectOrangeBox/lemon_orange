@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace dmyers\orange;
 
 use dmyers\orange\exceptions\ConfigNotFound;
+use dmyers\orange\interfaces\ConfigInterface;
 use dmyers\orange\exceptions\ConfigFolderNotFound;
 
-class Config
+class Config implements ConfigInterface
 {
 	protected $container = [];
 
@@ -69,6 +70,11 @@ class Config
 	}
 
 	public function __toString()
+	{
+		return $this->toString();
+	}
+
+	public function toString(): string
 	{
 		return json_encode($this->container, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 	}

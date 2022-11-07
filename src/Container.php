@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace dmyers\orange;
 
 use dmyers\orange\exceptions\ServiceNotFound;
+use dmyers\orange\interfaces\ContainerInterface;
 
-class Container
+class Container implements ContainerInterface
 {
 	/**
 	 * Registered Services
@@ -36,7 +37,7 @@ class Container
 	 *
 	 * $foo = $container->{'$var'};
 	 * $foo = $container->logger;
-	 * $foo = $container->{'logger[]'}; - generate a new instance reguardless
+	 * $foo = $container->{'logger[]'}; - generate a new instance reguardless of config
 	 *
 	 * @param string $serviceName Service Name
 	 *

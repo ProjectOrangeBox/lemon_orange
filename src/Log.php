@@ -6,21 +6,12 @@ namespace dmyers\orange;
 
 use Closure;
 use dmyers\orange\exceptions\InvalidValue;
+use dmyers\orange\interfaces\LogInterface;
 use dmyers\orange\exceptions\FolderNotWritable;
 use dmyers\orange\exceptions\invalidConfigurationValue;
 
-class Log
+class Log implements LogInterface
 {
-	const EMERGENCY = 1;
-	const ALERT = 2;
-	const CRITICAL = 4;
-	const ERROR = 8;
-	const WARNING = 16;
-	const NOTICE = 32;
-	const INFO = 64;
-	const DEBUG = 128;
-	const ALL = 255;
-
 	protected $config = [
 		'filepath' => null,
 		'permissions' => 0644,

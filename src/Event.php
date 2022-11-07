@@ -5,19 +5,10 @@ declare(strict_types=1);
 namespace dmyers\orange;
 
 use dmyers\orange\exceptions\InvalidValue;
+use dmyers\orange\interfaces\EventInterface;
 
-class Event
+class Event implements EventInterface
 {
-	const PRIORITY_LOWEST = 10;
-	const PRIORITY_LOW = 20;
-	const PRIORITY_NORMAL = 50;
-	const PRIORITY_HIGH = 80;
-	const PRIORITY_HIGHEST = 90;
-
-	const SORTED = 0;
-	const PRIORITY = 1;
-	const CALLABLE = 2;
-
 	/**
 	 * storage for events
 	 *
@@ -308,7 +299,7 @@ class Event
 	 *
 	 * @param string $name
 	 *
-	 * @return void
+	 * @return string
 	 *
 	 */
 	protected function normalizeName(string $name): string

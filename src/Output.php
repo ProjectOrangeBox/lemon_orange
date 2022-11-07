@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace dmyers\orange;
 
 use dmyers\orange\exceptions\ViewNotFound;
+use dmyers\orange\interfaces\OutputInterface;
 
-class Output
+class Output implements OutputInterface
 {
-	const HTML = 'text/html';
-	const JSON = 'application/json';
-	const JSONOPTIONS = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT;
-
 	protected $code = 200;
 	protected $contentType = 'text/html'; /* default to html */
 	protected $charSet = 'utf-8';
@@ -129,7 +126,7 @@ class Output
 		echo $this->sendResponseCode()->sendHeaders()->getOutput();
 	}
 
-	public function view($viewNameInternal, $viewDataInternal = []): string
+	public function view(string $viewNameInternal, array $viewDataInternal = []): string
 	{
 		/* what file are we looking for? */
 		$viewFileInternal = rtrim($this->config['views'], '/') . '/' . $viewNameInternal . '.php';
@@ -153,7 +150,7 @@ class Output
 		return ob_get_clean();
 	}
 
-	public function redirect(string $url, int $responseCode = 200)
+	public function redirect(string $url, int $responseCode = 200): void
 	{
 		$this->header('Location: ' . $url)->responseCode($responseCode);
 	}

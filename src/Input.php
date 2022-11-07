@@ -4,21 +4,34 @@ declare(strict_types=1);
 
 namespace dmyers\orange;
 
-class Input
+use Exception;
+use dmyers\orange\interfaces\InputInterface;
+use dmyers\orange\exceptions\InvalidConfigurationValue;
+
+class Input implements InputInterface
 {
 	protected $input = [];
 	protected $requestType = '';
 	protected $requestMethod = '';
+	protected $case = CASE_LOWER; /* CASE_LOWER, CASE_UPPER, NULL */
 
 	public function __construct(array $config)
 	{
+		$case = $config['case'] ?? $this->case;
+
+		if ($case != CASE_LOWER || $case != CASE_UPPER) {
+			throw new InvalidConfigurationValue($case);
+		}
+
 		$this->input['raw'] = $config['raw'];
-		$this->input['post'] = array_change_key_case($config['post'], CASE_LOWER);
-		$this->input['get'] = array_change_key_case($config['get'], CASE_LOWER);
-		$this->input['request'] = array_change_key_case($config['request'], CASE_LOWER);
-		$this->input['server'] = array_change_key_case($config['server'], CASE_LOWER);
-		$this->input['env'] = array_change_key_case($config['env'], CASE_LOWER);
-		$this->input['cookie'] = array_change_key_case($config['cookie'], CASE_LOWER);
+
+		foreach (['post', 'get', 'request', 'server', 'env', 'cookie'] as $key) {
+			if ($case !== null) {
+				$this->input[$key] = array_change_key_case($config[$key], $case);
+			} else {
+				$this->input[$key] = $config[$key];
+			}
+		}
 
 		/* setup the request type based on a few things */
 		$isAjax = (!empty($this->input['server']['http_x_requested_with']) && strtolower($this->input['server']['http_x_requested_with']) == 'xmlhttprequest');
